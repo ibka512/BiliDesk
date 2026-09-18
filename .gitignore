@@ -1,0 +1,25 @@
+# Xcode user state
+xcuserdata/
+*.xcuserstate
+*.xcscmblueprint
+
+# Build products and local work
+DerivedData/
+build/
+work/
+outputs/
+*.dmg
+*.zip
+
+# macOS metadata
+.DS_Store
+
+# Signing material and secrets
+*.p12
+*.p8
+*.cer
+*.mobileprovision
+*.provisionprofile
+*.key
+*.pem
+
