@@ -308,7 +308,7 @@
 				CODE_SIGN_ENTITLEMENTS = BiliDeskApp/BiliDeskApp.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 13;
+				CURRENT_PROJECT_VERSION = 14;
 				ENABLE_HARDENED_RUNTIME = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_AppGroupIdentifier = "$(DEVELOPMENT_TEAM).com.local.BiliDesk";
@@ -316,7 +316,7 @@
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.entertainment";
 				INFOPLIST_KEY_LSUIElement = YES;
 				MACOSX_DEPLOYMENT_TARGET = 14.0;
-				MARKETING_VERSION = 2.7;
+				MARKETING_VERSION = 2.7.1;
 				PRODUCT_BUNDLE_IDENTIFIER = com.local.BiliDesk;
 				PRODUCT_NAME = BiliDesk;
 				SWIFT_VERSION = 6.0;
@@ -330,7 +330,7 @@
 				CODE_SIGN_ENTITLEMENTS = BiliDeskApp/BiliDeskApp.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 13;
+				CURRENT_PROJECT_VERSION = 14;
 				ENABLE_HARDENED_RUNTIME = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_AppGroupIdentifier = "$(DEVELOPMENT_TEAM).com.local.BiliDesk";
@@ -338,7 +338,7 @@
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.entertainment";
 				INFOPLIST_KEY_LSUIElement = YES;
 				MACOSX_DEPLOYMENT_TARGET = 14.0;
-				MARKETING_VERSION = 2.7;
+				MARKETING_VERSION = 2.7.1;
 				PRODUCT_BUNDLE_IDENTIFIER = com.local.BiliDesk;
 				PRODUCT_NAME = BiliDesk;
 				SWIFT_VERSION = 6.0;
@@ -350,11 +350,11 @@
 			buildSettings = {
 				CODE_SIGN_ENTITLEMENTS = BiliDeskWidget/BiliDeskWidget.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 13;
+				CURRENT_PROJECT_VERSION = 14;
 				GENERATE_INFOPLIST_FILE = NO;
 				INFOPLIST_FILE = BiliDeskWidget/Info.plist;
 				MACOSX_DEPLOYMENT_TARGET = 14.0;
-				MARKETING_VERSION = 2.7;
+				MARKETING_VERSION = 2.7.1;
 				PRODUCT_BUNDLE_IDENTIFIER = com.local.BiliDesk.Widget;
 				PRODUCT_NAME = BiliDeskWidget;
 				SKIP_INSTALL = YES;
@@ -367,11 +367,11 @@
 			buildSettings = {
 				CODE_SIGN_ENTITLEMENTS = BiliDeskWidget/BiliDeskWidget.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 13;
+				CURRENT_PROJECT_VERSION = 14;
 				GENERATE_INFOPLIST_FILE = NO;
 				INFOPLIST_FILE = BiliDeskWidget/Info.plist;
 				MACOSX_DEPLOYMENT_TARGET = 14.0;
-				MARKETING_VERSION = 2.7;
+				MARKETING_VERSION = 2.7.1;
 				PRODUCT_BUNDLE_IDENTIFIER = com.local.BiliDesk.Widget;
 				PRODUCT_NAME = BiliDeskWidget;
 				SKIP_INSTALL = YES;

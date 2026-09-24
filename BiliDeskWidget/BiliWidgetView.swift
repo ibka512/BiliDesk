@@ -31,23 +31,24 @@ struct BiliWidgetView: View {
                 GeometryReader { proxy in
                     WidgetLink(destination: video.webURL) {
                         ZStack(alignment: .bottomLeading) {
-                        WidgetCover(video: video, data: entry.images[video.id], cornerRadius: 0)
-                            .frame(width: proxy.size.width, height: proxy.size.height)
-                        MediaTextScrim(cornerRadius: 0, endOpacity: 0.86, immersive: true)
-                        VStack(alignment: .leading, spacing: 5) {
-                            Text(video.title)
-                                .font(.callout.weight(.semibold))
-                                .lineLimit(2)
-                                .multilineTextAlignment(.leading)
-                            Text(video.ownerName)
-                                .font(.caption2)
-                                .foregroundStyle(.white.opacity(0.78))
-                                .lineLimit(1)
-                        }
-                        .frame(width: max(proxy.size.width - 26, 0), alignment: .leading)
-                        .foregroundStyle(.white)
-                        .shadow(color: .black.opacity(0.9), radius: 2, y: 1)
-                        .padding(13)
+                            WidgetCover(video: video, data: entry.images[video.id], cornerRadius: 0, showsDuration: false)
+                                .frame(width: proxy.size.width, height: proxy.size.height)
+                            MediaTextScrim(cornerRadius: 0, endOpacity: 0.88, immersive: true)
+                            VStack(alignment: .leading, spacing: 5) {
+                                Text(video.title)
+                                    .font(.system(size: 13, weight: .semibold))
+                                    .lineLimit(3)
+                                    .multilineTextAlignment(.leading)
+                                Text(video.ownerName)
+                                    .font(.system(size: 10, weight: .medium))
+                                    .foregroundStyle(.white.opacity(0.82))
+                                    .lineLimit(1)
+                            }
+                            .frame(width: max(proxy.size.width - 28, 0), alignment: .leading)
+                            .foregroundStyle(.white)
+                            .shadow(color: .black.opacity(0.8), radius: 2, y: 1)
+                            .padding(.horizontal, 14)
+                            .padding(.bottom, 13)
                         }
                         .frame(width: proxy.size.width, height: proxy.size.height)
                         .contentShape(Rectangle())
@@ -68,19 +69,23 @@ struct BiliWidgetView: View {
     }
 
     private var medium: some View {
-        VStack(alignment: .leading, spacing: 10) {
+        VStack(alignment: .leading, spacing: 9) {
             widgetHeader(title: "为你推荐", subtitle: updatedText)
             if let hero = recommendations.first {
                 GeometryReader { proxy in
                     HStack(spacing: 10) {
                         HeroVideoCard(video: hero, data: entry.images[hero.id], showsOwner: true)
-                            .frame(width: proxy.size.width * 0.60)
-                        VStack(spacing: 8) {
-                            ForEach(Array(recommendations.dropFirst().prefix(2))) { video in
-                                CompactVideoCard(video: video, data: entry.images[video.id])
-                            }
-                            if recommendations.count < 2 {
-                                quietPlaceholder(text: "刷新发现更多内容")
+                            .frame(width: proxy.size.width * 0.58)
+                        VStack(spacing: 6) {
+                            ForEach(1..<3, id: \.self) { index in
+                                Group {
+                                    if recommendations.indices.contains(index) {
+                                        RecommendationTextRow(video: recommendations[index])
+                                    } else {
+                                        quietPlaceholder(text: "换一批看看")
+                                    }
+                                }
+                                .frame(maxWidth: .infinity, maxHeight: .infinity)
                             }
                         }
                     }
@@ -93,18 +98,28 @@ struct BiliWidgetView: View {
     }
 
     private var large: some View {
-        VStack(alignment: .leading, spacing: 11) {
+        VStack(alignment: .leading, spacing: 8) {
             widgetHeader(title: "Bili 推荐", subtitle: updatedText)
             if let hero = recommendations.first {
                 GeometryReader { proxy in
-                    HStack(spacing: 10) {
-                        HeroVideoCard(video: hero, data: entry.images[hero.id], showsOwner: true)
-                            .frame(width: proxy.size.width * 0.61)
-                        VStack(spacing: 9) {
-                            ForEach(Array(recommendations.dropFirst().prefix(2))) { video in
-                                CompactVideoCard(video: video, data: entry.images[video.id])
+                    let secondaryHeight = min(74, max(0, proxy.size.height * 0.34))
+                    VStack(spacing: 8) {
+                        HeroVideoCard(video: hero, data: entry.images[hero.id], showsOwner: true, prominent: true)
+                            .frame(height: max(0, proxy.size.height - secondaryHeight - 8))
+                        HStack(spacing: 9) {
+                            ForEach(1..<3, id: \.self) { index in
+                                Group {
+                                    if recommendations.indices.contains(index) {
+                                        let video = recommendations[index]
+                                        CompactVideoCard(video: video, data: entry.images[video.id])
+                                    } else {
+                                        quietPlaceholder(text: "换一批看看")
+                                    }
+                                }
+                                .frame(maxWidth: .infinity, maxHeight: .infinity)
                             }
                         }
+                        .frame(height: secondaryHeight)
                     }
                 }
                 .layoutPriority(1)
@@ -117,9 +132,9 @@ struct BiliWidgetView: View {
                 PersonalCard(title: "最近收藏", icon: "star.fill", video: entry.snapshot.favorites.first, data: imageData(for: entry.snapshot.favorites.first), emptyText: privateEmptyText)
                 PersonalCard(title: "稍后再看", icon: "bookmark.fill", video: entry.snapshot.watchLater.first, data: imageData(for: entry.snapshot.watchLater.first), emptyText: privateEmptyText)
             }
-            .frame(height: 112)
+            .frame(height: 80)
         }
-        .padding(15)
+        .padding(14)
     }
 
     private var extraLarge: some View {
@@ -398,35 +413,36 @@ private struct HeroVideoCard: View {
     let video: VideoItem
     let data: Data?
     let showsOwner: Bool
+    var prominent = false
 
     var body: some View {
         GeometryReader { proxy in
             WidgetLink(destination: video.webURL) {
                 ZStack(alignment: .bottomLeading) {
-                WidgetCover(video: video, data: data, cornerRadius: 14)
-                    .frame(width: proxy.size.width, height: proxy.size.height)
-                MediaTextScrim(cornerRadius: 14, endOpacity: 0.78)
-                VStack(alignment: .leading, spacing: 4) {
-                    Text(video.title)
-                        .font(.caption.weight(.bold))
-                        .lineLimit(2)
-                        .multilineTextAlignment(.leading)
-                    if showsOwner {
-                        HStack(spacing: 6) {
-                            Text(video.ownerName)
-                            if let views = video.viewCountText {
-                                Label(views, systemImage: "play.fill")
+                    WidgetCover(video: video, data: data, cornerRadius: 14, durationAlignment: .topTrailing)
+                        .frame(width: proxy.size.width, height: proxy.size.height)
+                    MediaTextScrim(cornerRadius: 14, endOpacity: 0.82)
+                    VStack(alignment: .leading, spacing: 4) {
+                        Text(video.title)
+                            .font(.system(size: prominent ? 14 : 12, weight: .bold))
+                            .lineLimit(2)
+                            .multilineTextAlignment(.leading)
+                        if showsOwner {
+                            HStack(spacing: 6) {
+                                Text(video.ownerName)
+                                if let views = video.viewCountText {
+                                    Label(views, systemImage: "play.fill")
+                                }
                             }
+                            .font(.system(size: 9, weight: .medium))
+                            .foregroundStyle(.white.opacity(0.82))
+                            .lineLimit(1)
                         }
-                        .font(.system(size: 9, weight: .medium))
-                        .foregroundStyle(.white.opacity(0.76))
-                        .lineLimit(1)
                     }
-                }
-                .frame(width: max(proxy.size.width - 20, 0), alignment: .leading)
-                .foregroundStyle(.white)
-                .shadow(color: .black.opacity(0.9), radius: 2, y: 1)
-                .padding(10)
+                    .frame(width: max(proxy.size.width - 22, 0), alignment: .leading)
+                    .foregroundStyle(.white)
+                    .shadow(color: .black.opacity(0.8), radius: 2, y: 1)
+                    .padding(11)
                 }
                 .frame(width: proxy.size.width, height: proxy.size.height)
                 .contentShape(Rectangle())
@@ -434,6 +450,32 @@ private struct HeroVideoCard: View {
             .accessibilityLabel(video.accessibilityLabel)
             .accessibilityHint("在浏览器中播放")
         }
+    }
+}
+
+private struct RecommendationTextRow: View {
+    let video: VideoItem
+
+    var body: some View {
+        WidgetLink(destination: video.webURL) {
+            HStack(spacing: 8) {
+                Capsule()
+                    .fill(.pink)
+                    .frame(width: 2, height: 24)
+                Text(video.title)
+                    .font(.system(size: 10, weight: .semibold))
+                    .foregroundStyle(.primary)
+                    .lineLimit(2)
+                    .multilineTextAlignment(.leading)
+            }
+            .padding(.horizontal, 9)
+            .padding(.vertical, 6)
+            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .leading)
+            .background(.primary.opacity(0.05), in: RoundedRectangle(cornerRadius: 10, style: .continuous))
+            .contentShape(Rectangle())
+        }
+        .accessibilityLabel(video.accessibilityLabel)
+        .accessibilityHint("在浏览器中播放")
     }
 }
 
@@ -445,7 +487,7 @@ private struct CompactVideoCard: View {
         GeometryReader { proxy in
             WidgetLink(destination: video.webURL) {
                 ZStack(alignment: .bottomLeading) {
-                WidgetCover(video: video, data: data, cornerRadius: 11)
+                WidgetCover(video: video, data: data, cornerRadius: 11, durationAlignment: .topTrailing)
                     .frame(width: proxy.size.width, height: proxy.size.height)
                 MediaTextScrim(cornerRadius: 11, endOpacity: 0.76)
                 Text(video.title)
@@ -479,7 +521,7 @@ private struct PersonalCard: View {
                 GeometryReader { proxy in
                     WidgetLink(destination: video.webURL) {
                         ZStack(alignment: .bottomLeading) {
-                        WidgetCover(video: video, data: data, cornerRadius: 11)
+                        WidgetCover(video: video, data: data, cornerRadius: 11, durationAlignment: .topTrailing)
                             .frame(width: proxy.size.width, height: proxy.size.height)
                         MediaTextScrim(cornerRadius: 11, endOpacity: 0.82)
                         VStack(alignment: .leading, spacing: 3) {
@@ -580,9 +622,11 @@ private struct WidgetCover: View {
     let video: VideoItem
     let data: Data?
     let cornerRadius: CGFloat
+    var showsDuration = true
+    var durationAlignment: Alignment = .bottomTrailing
 
     var body: some View {
-        ZStack(alignment: .bottomTrailing) {
+        ZStack(alignment: durationAlignment) {
             Group {
                 if let data, let image = NSImage(data: data) {
                     mediaImage(image)
@@ -599,7 +643,7 @@ private struct WidgetCover: View {
                 }
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity)
-            if !video.durationText.isEmpty {
+            if showsDuration && !video.durationText.isEmpty {
                 Text(video.durationText)
                     .font(.system(size: 8, weight: .semibold, design: .rounded).monospacedDigit())
                     .foregroundStyle(.white)
